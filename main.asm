@@ -49,9 +49,6 @@ main:
 
 	rcall delay_1s
 	rcall display_post_home
-	
-	;manual change to default baudrate with known baudrate
-	;*insert*
 
 	finish:
 		rjmp finish
