@@ -10,6 +10,7 @@ The SerLCD v2.5 is a simple and cost-effective solution for interfacing with Liq
 |------------------------|---------|
 | Set Baud rate to 9600  | 0x7C, 0x0D |
 | Backlight Fully ON     | 0x7C, 0x9D |
+| Clear screen           | 0x7C, 0x
 | Ignore RX ON/OFF       | 0x7C, 0x1A |
 | Reset to 9600 Baud     | 0x12 (send during first 500ms of boot-up) |
 
@@ -37,16 +38,16 @@ Once the baud rate of the LCD changes, the controlling device must match the new
 ![System diagram](./image/flow_chart.png)
 ## Alternative Reset Method:
 ### Program Software Reset:
-To avoid baud rate mismatches, **send `CTRL-R` (`0x12`) at 9600 baud within the first 500ms of boot-up (while the splash screen is active)**. This will reset the device to its default communication settings.
+To avoid baud rate mismatches, **send `CTRL-R` (0x12) at 9600 baud within the first 500ms of boot-up (while the splash screen is active)**. This will reset the device to its default communication settings.
 
 ### Direct Hardware Reset: 
-> **Note:** The below methods require the LCD to be set with "Ignore RX OFF" which enable the RX pin to be shorted to ground. 
+> **Note:** The below methods require the LCD to be set with "Ignore RX OFF" (0x7C, 0x1A) which enable/disable the RX pin to be shorted to ground. See table "Notable Command".
 
 If the OpenLCD is stuck with an unknown baud rate, unknown I2C address, etc, there is a safety mechanism built-in. First connect a black write from the GND pin of the LCD to circuit ground. Then connect another black wire from the RX pin to the GND pin of the LCD. There should now be two wires coming from GND of the LCD, one directly to connected to ground and another connected to the RX pin of the LCD. Now power connect the red wire to VCC pin of the LCD to power it on. 
 
 You should see the splash screen rebooting the LCD to the default setting ending with a message: "System reset Power cycle me" and the backlight will begin to blink. OpenLCD is now reset to 9600 Baud with a I2C address of 0x72. MAKE SURE to power down OpenLCD and remove the RX/GND jumper before use.  
 ![System diagram](./image/reseted.jpg)
-> **Note:** This feature can be disabled. See *Ignore Emergency Reset* for more information.
+> **Note:** This feature can be disabled by sending (0x7C, 0x1A) again if the current mode is "Ignore RX OFF".
 
 
 
